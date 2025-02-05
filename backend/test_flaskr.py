@@ -18,9 +18,12 @@ class TriviaTestCase(unittest.TestCase):
 
     def tearDown(self):
         """Executed after each test"""
-        pass
+        with self.app.app_context():
+            db.session.remove()
+            db.drop_all()
 
     def test_get_questions(self):
+        """Test getting paginated questions"""
         response = self.client().get('/questions')
         data = json.loads(response.data)
 
@@ -31,6 +34,7 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(data['current_category'])
 
     def test_404_sent_requesting_beyond_valid_page(self):
+        """Test 404 error when requesting beyond valid page"""
         response = self.client().get('/questions?page=1000')
         data = json.loads(response.data)
 
@@ -39,6 +43,7 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['message'], 'resource not found')
 
     def test_create_question(self):
+        """Test creating a new question"""
         new_question = {
             'question': 'What is the capital of France?',
             'answer': 'Paris',
@@ -53,6 +58,7 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(data['created'])
 
     def test_422_create_question(self):
+        """Test 422 error when creating a question with missing data"""
         new_question = {
             'question': 'What is the capital of France?',
             'answer': 'Paris'
@@ -65,6 +71,7 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['message'], 'unprocessable')
 
     def test_delete_question(self):
+        """Test deleting a question"""
         # First, create a question to delete
         new_question = {
             'question': 'What is the capital of Germany?',
@@ -85,6 +92,7 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(data['deleted'])
 
     def test_404_delete_question(self):
+        """Test 404 error when deleting a non-existent question"""
         response = self.client().delete('/questions/1000')
         data = json.loads(response.data)
 

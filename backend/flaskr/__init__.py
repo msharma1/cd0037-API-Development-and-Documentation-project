@@ -13,7 +13,7 @@ def create_app(test_config=None):
     def get_questions():
         try:
             page = request.args.get('page', 1, type=int)
-            questions = Question.query.paginate(page, QUESTIONS_PER_PAGE, False)
+            questions = Question.query.paginate(page=page, per_page=QUESTIONS_PER_PAGE, error_out=False)
 
             if questions.items == []:
                 abort(404)
