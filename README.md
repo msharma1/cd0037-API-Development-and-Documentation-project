@@ -21,7 +21,7 @@ Fetches a dictionary of categories in which the keys are the IDs and the values 
     "5": "Entertainment",
     "6": "Sports"
   }
-}```
+}
 
 **2. GET /questions**
 
@@ -56,7 +56,7 @@ Fetches a list of questions, paginated in groups of 10. Also returns the total n
     "1": "Science"
   },
   "current_category": null
-}```
+}
 
 **3. DELETE /questions/<int:question_id>**
 
@@ -73,7 +73,7 @@ Deletes a question by ID.
 {
   "success": true,
   "deleted": 12
-}```
+}
 
 **4. POST /questions**
 
@@ -95,7 +95,7 @@ Creates a new question.
 {
   "success": true,
   "created": 123
-}```
+}
 **5. POST /questions/search**
 
 Searches for questions based on a search term.
@@ -135,7 +135,7 @@ Fetches questions for a given category.
   "questions":,
   "total_questions": 25,
   "current_category": "Science"
-}```
+}
 **7. POST /quizzes**
 
 Fetches a random question for a quiz, based on a category and previous questions.
@@ -154,7 +154,7 @@ Fetches a random question for a quiz, based on a category and previous questions
 {
   "success": true,
   "question": {}
-}```
+}
 ## Error Handlers
 
 The API includes error handlers for the following status codes:
