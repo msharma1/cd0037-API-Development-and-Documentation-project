@@ -10,7 +10,7 @@ Fetches a dictionary of categories in which the keys are the IDs and the values 
 
 **Returns:** An object with a single key, categories, that contains a dictionary of id: category_string key-value pairs.
 
-json
+```json
 {
   "success": true,
   "categories": {
@@ -22,7 +22,7 @@ json
     "6": "Sports"
   }
 }
-
+```
 **2. GET /questions**
 
 Fetches a list of questions, paginated in groups of 10. Also returns the total number of questions and all available categories.
@@ -39,7 +39,7 @@ Fetches a list of questions, paginated in groups of 10. Also returns the total n
 *   `categories`: A dictionary of id: category_string key-value pairs.
 *   `current_category`: The category of the returned questions (currently always null).
 
-json
+```json
 {
   "success": true,
   "questions": [
@@ -57,7 +57,7 @@ json
   },
   "current_category": null
 }
-
+```
 **3. DELETE /questions/<int:question_id>**
 
 Deletes a question by ID.
@@ -69,12 +69,12 @@ Deletes a question by ID.
 *   `success`: Boolean indicating if the request was successful.
 *   `deleted`: The ID of the deleted question.
 
-json
+```json
 {
   "success": true,
   "deleted": 12
 }
-
+```
 **4. POST /questions**
 
 Creates a new question.
@@ -91,11 +91,12 @@ Creates a new question.
 *   `success`: Boolean indicating if the request was successful.
 *   `created`: The ID of the created question.
 
-json
+```json
 {
   "success": true,
   "created": 123
 }
+```
 **5. POST /questions/search**
 
 Searches for questions based on a search term.
@@ -110,12 +111,13 @@ Searches for questions based on a search term.
 *   `questions`: A list of question objects matching the search term.
 *   `total_questions`: The total number of questions matching the search term.
 
-json
+```json
 {
   "success": true,
   "questions":,
   "total_questions": 5
-}```
+}
+```
 **6. GET /categories/<int:category_id>/questions**
 
 Fetches questions for a given category.
@@ -129,13 +131,14 @@ Fetches questions for a given category.
 *   `total_questions`: The total number of questions for the given category.
 *   `current_category`: The category of the returned questions.
 
-json
+```json
 {
   "success": true,
   "questions":,
   "total_questions": 25,
   "current_category": "Science"
 }
+```
 **7. POST /quizzes**
 
 Fetches a random question for a quiz, based on a category and previous questions.
@@ -150,11 +153,12 @@ Fetches a random question for a quiz, based on a category and previous questions
 *   `success`: Boolean indicating if the request was successful.
 *   `question`: A random question object (or null if there are no more questions).
 
-json
+```json
 {
   "success": true,
   "question": {}
 }
+```
 ## Error Handlers
 
 The API includes error handlers for the following status codes:
