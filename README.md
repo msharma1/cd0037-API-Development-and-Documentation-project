@@ -1,49 +1,180 @@
-# API Development and Documentation Final Project
+Trivia API Documentation
 
-## Trivia App
+Endpoints
 
-Udacity is invested in creating bonding experiences for its employees and students. A bunch of team members got the idea to hold trivia on a regular basis and created a webpage to manage the trivia app and play the game, but their API experience is limited and still needs to be built out.
+1. GET /categories
 
-That's where you come in! Help them finish the trivia app so they can start holding trivia and seeing who's the most knowledgeable of the bunch. The application must:
+Fetches a dictionary of categories in which the keys are the IDs and the values are the corresponding category names.
 
-1. Display questions - both all questions and by category. Questions should show the question, category and difficulty rating by default and can show/hide the answer.
-2. Delete questions.
-3. Add questions and require that they include question and answer text.
-4. Search for questions based on a text query string.
-5. Play the quiz game, randomizing either all questions or within a specific category.
+Request Arguments: None
 
-Completing this trivia app will give you the ability to structure plan, implement, and test an API - skills essential for enabling your future applications to communicate with others.
+Returns: An object with a single key, categories, that contains a dictionary of id: category_string key-value pairs.
 
-## Starting and Submitting the Project
+{
+  "success": true,
+  "categories": {
+    "1": "Science",
+    "2": "Art",
+    "3": "Geography",
+    "4": "History",
+    "5": "Entertainment",
+    "6": "Sports"
+  }
+}
 
-[Fork](https://help.github.com/en/articles/fork-a-repo) the project repository and [clone](https://help.github.com/en/articles/cloning-a-repository) your forked repository to your machine. Work on the project locally and make sure to push all your changes to the remote repository before submitting the link to your repository in the Classroom.
+2. GET /questions
 
-## About the Stack
+Fetches a list of questions, paginated in groups of 10. Also returns the total number of questions and all available categories.
 
-We started the full stack application for you. It is designed with some key functional areas:
+Request Arguments:
 
-### Backend
+page (optional): The page number of questions to return (default: 1).
 
-The [backend](./backend/README.md) directory contains a partially completed Flask and SQLAlchemy server. You will work primarily in `__init__.py` to define your endpoints and can reference models.py for DB and SQLAlchemy setup. These are the files you'd want to edit in the backend:
+Returns: An object containing:
 
-1. `backend/flaskr/__init__.py`
-2. `backend/test_flaskr.py`
+success: Boolean indicating if the request was successful.
 
-> View the [Backend README](./backend/README.md) for more details.
+questions: A list of question objects, each containing id, question, answer, category, and difficulty.
 
-### Frontend
+total_questions: The total number of questions in the database.
 
-The [frontend](./frontend/README.md) directory contains a complete React frontend to consume the data from the Flask server. If you have prior experience building a frontend application, you should feel free to edit the endpoints as you see fit for the backend you design. If you do not have prior experience building a frontend application, you should read through the frontend code before starting and make notes regarding:
+categories: A dictionary of id: category_string key-value pairs.
 
-1. What are the end points and HTTP methods the frontend is expecting to consume?
-2. How are the requests from the frontend formatted? Are they expecting certain parameters or payloads?
+current_category: The category of the returned questions (currently always null).
 
-Pay special attention to what data the frontend is expecting from each API response to help guide how you format your API. The places where you may change the frontend behavior, and where you should be looking for the above information, are marked with `TODO`. These are the files you'd want to edit in the frontend:
+{
+  "success": true,
+  "questions": [
+    {
+      "id": 1,
+      "question": "What is the capital of France?",
+      "answer": "Paris",
+      "category": "3",
+      "difficulty": 1
+    }
+  ],
+  "total_questions": 100,
+  "categories": {
+    "1": "Science"
+  },
+  "current_category": null
+}
 
-1. `frontend/src/components/QuestionView.js`
-2. `frontend/src/components/FormView.js`
-3. `frontend/src/components/QuizView.js`
+3. DELETE /questions/<int:question_id>
 
-By making notes ahead of time, you will practice the core skill of being able to read and understand code and will have a simple plan to follow to build out the endpoints of your backend API.
+Deletes a question by ID.
 
-> View the [Frontend README](./frontend/README.md) for more details.
+Request Arguments: None
+
+Returns:
+
+success: Boolean indicating if the request was successful.
+
+deleted: The ID of the deleted question.
+
+{
+  "success": true,
+  "deleted": 12
+}
+
+4. POST /questions
+
+Creates a new question.
+
+Request Body:
+
+question: The text of the question.
+
+answer: The answer to the question.
+
+category: The ID of the category for the question.
+
+difficulty: The difficulty level of the question (1-5).
+
+Returns:
+
+success: Boolean indicating if the request was successful.
+
+created: The ID of the created question.
+
+{
+  "success": true,
+  "created": 123
+}
+
+5. POST /questions/search
+
+Searches for questions based on a search term.
+
+Request Body:
+
+searchTerm: The term to search for in the questions.
+
+Returns:
+
+success: Boolean indicating if the request was successful.
+
+questions: A list of question objects matching the search term.
+
+total_questions: The total number of questions matching the search term.
+
+{
+  "success": true,
+  "questions": [],
+  "total_questions": 5
+}
+
+6. GET /categories/<int:category_id>/questions
+
+Fetches questions for a given category.
+
+Request Arguments: None
+
+Returns:
+
+success: Boolean indicating if the request was successful.
+
+questions: A list of question objects for the given category.
+
+total_questions: The total number of questions for the given category.
+
+current_category: The category of the returned questions.
+
+{
+  "success": true,
+  "questions": [],
+  "total_questions": 25,
+  "current_category": "Science"
+}
+
+7. POST /quizzes
+
+Fetches a random question for a quiz, based on a category and previous questions.
+
+Request Body:
+
+previous_questions: A list of IDs of previous questions (to avoid repetition).
+
+quiz_category: An object with the ID of the category to fetch questions from, or 0 for all categories.
+
+Returns:
+
+success: Boolean indicating if the request was successful.
+
+question: A random question object (or null if there are no more questions).
+
+{
+  "success": true,
+  "question": {}
+}
+
+Error Handlers
+
+The API includes error handlers for the following status codes:
+
+400 Bad Request: Returned when a required parameter is missing or invalid.
+
+404 Not Found: Returned when a resource is not found (e.g., a non-existent question or category).
+
+422 Unprocessable Entity: Returned when a request is well-formed but cannot be processed due to semantic errors.
+
