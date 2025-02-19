@@ -2,6 +2,11 @@ import unittest
 import json
 from flaskr import create_app
 from models import db, Question, Category
+from settings import DB_USER, DB_PASSWORD
+
+# Database configuration
+database_name= "trivia_test"
+database_path = 'postgresql://{}:{}@{}/{}'.format(DB_USER,DB_PASSWORD,'localhost:5432', database_name)
 
 
 class TriviaTestCase(unittest.TestCase):
@@ -10,11 +15,9 @@ class TriviaTestCase(unittest.TestCase):
     def setUp(self):
         """Define test variables and initialize app."""
         self.database_name = "trivia_test"
-        self.database_user = "postgres"
-        self.database_password = "password"
         self.database_host = "localhost:5432"
-        self.database_path = f"postgresql://{self.database_user}:{self.database_password}@{self.database_host}/{self.database_name}"
-
+        self.database_path = database_path
+        
         self.app = create_app({
             "SQLALCHEMY_DATABASE_URI": self.database_path,
             "SQLALCHEMY_TRACK_MODIFICATIONS": False,
