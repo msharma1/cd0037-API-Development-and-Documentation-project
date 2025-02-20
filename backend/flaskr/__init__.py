@@ -101,14 +101,21 @@ def create_app(test_config=None):
     @app.route('/questions', methods=['POST'])
     def create_question():
         data = request.get_json()
+
+        if data is None:
+            return jsonify({"success": False, "error": 400, "message": "Invalid JSON input"}), 400
+
         question_text = data.get('question')
         answer = data.get('answer')
         category = data.get('category')
         difficulty = data.get('difficulty')
+
         if not (question_text and answer and category and difficulty):
-            abort(400, description="Missing required fields")
+            return jsonify({"success": False, "error": 400, "message": "Missing required fields"}), 400
+
         question = Question(question=question_text, answer=answer, category=category, difficulty=difficulty)
         question.insert()
+
         return jsonify({'success': True, 'created': question.id}), 201
 
     """
@@ -170,11 +177,29 @@ def create_app(test_config=None):
         data = request.get_json()
         category_id = data.get('quiz_category', {}).get('id')
         previous_questions = data.get('previous_questions', [])
+
+        # Validate category
+        if category_id and not Category.query.get(category_id):
+            return jsonify({
+                "success": False,
+                "error": 404,
+                "message": "Category not found"
+            }), 404
+
         query = Question.query
         if category_id:
             query = query.filter(Question.category == str(category_id))
+
         questions = query.filter(Question.id.notin_(previous_questions)).all()
-        return jsonify({'success': True, 'question': random.choice(questions).format() if questions else None})
+
+        if not questions:
+            return jsonify({
+                "success": False,
+                "error": 404,
+                "message": "No questions found"
+            }), 404
+
+        return jsonify({'success': True, 'question': random.choice(questions).format()})
 
     """
     @DONE:
