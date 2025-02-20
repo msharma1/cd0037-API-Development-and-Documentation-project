@@ -3,6 +3,7 @@ import json
 from flaskr import create_app
 from models import db, Question, Category
 from settings import DB_USER, DB_PASSWORD
+from sqlalchemy import text  # Import text from sqlalchemy
 
 # Database configuration
 database_name= "trivia_test"
@@ -39,6 +40,9 @@ class TriviaTestCase(unittest.TestCase):
         """Executed after each test"""
         with self.app.app_context():
             db.session.remove()
+            with db.engine.connect() as connection:
+                connection.execute(text("DROP TABLE IF EXISTS questions CASCADE;"))
+                connection.execute(text("DROP TABLE IF EXISTS categories CASCADE;"))
             db.drop_all()
     """
     def test_get_categories(self):
